@@ -7,31 +7,51 @@ function start() {
 start();
 
 function getInput(e) {
-  if (e.key === "Enter") {
-    let inputValue = document.getElementById("inputBox").value;
-    taskArray.push(inputValue);
-    document.getElementById("inputBox").value = "";
-    displayTasks();
+  let initialInputValue = document.getElementById("inputBox").value;
+  console.log(initialInputValue);
+  let initialInputValueIndex = taskArray.indexOf(initialInputValue);
+  if (initialInputValueIndex) {
+    if (e.key === "Enter") {
+      taskArray[initialInputValueIndex] =
+        document.getElementById("inputBox").value;
+      displayTasks(taskArray);
+    }
+  } else {
+    if (e.key === "Enter") {
+      let inputValue = document.getElementById("inputBox").value;
+      taskArray.push(inputValue);
+      document.getElementById("inputBox").value = "";
+      displayTasks(taskArray);
+    }
   }
 }
 
-function displayTasks() {
+function displayTasks(taskArray) {
   console.log(taskArray);
-  let a = document.getElementById("container");
-  if (a) {
-    a.remove();
+  let taskDiv = document.getElementById("container");
+  if (taskDiv) {
+    taskDiv.remove();
     const outerDiv = document.createElement("div");
     outerDiv.setAttribute("id", "container");
     for (let task of taskArray) {
       let taskDetail = document.createElement("p");
+      const btnDiv = document.createElement("div");
+      btnDiv.style.display = "flex";
+      btnDiv.style.gap = "15px";
       let button = document.createElement("button");
       button.innerText = "Delete";
+      let editButton = document.createElement("button");
+      editButton.innerText = "Edit";
       button.setAttribute("id", taskArray.indexOf(task));
-      button.onclick = deleteTask;
-      console.log(button);
+      editButton.setAttribute("id", taskArray.indexOf(task));
       taskDetail.innerText = task;
       outerDiv.appendChild(taskDetail);
-      outerDiv.appendChild(button);
+      outerDiv.appendChild(btnDiv);
+      btnDiv.appendChild(editButton);
+      btnDiv.appendChild(button);
+
+      button.onclick = deleteTask;
+      editButton.onclick = editTask;
 
       document.body.appendChild(outerDiv);
     }
@@ -40,14 +60,23 @@ function displayTasks() {
     outerDiv.setAttribute("id", "container");
     for (let task of taskArray) {
       let taskDetail = document.createElement("p");
+      const btnDiv = document.createElement("div");
+      btnDiv.style.display = "flex";
+      btnDiv.style.gap = "15px";
       let button = document.createElement("button");
       button.innerText = "Delete";
+      let editButton = document.createElement("button");
+      editButton.innerText = "Edit";
       button.setAttribute("id", taskArray.indexOf(task));
-      button.onclick = deleteTask;
-      console.log(button);
+      editButton.setAttribute("id", taskArray.indexOf(task));
       taskDetail.innerText = task;
       outerDiv.appendChild(taskDetail);
-      outerDiv.appendChild(button);
+      outerDiv.appendChild(btnDiv);
+      btnDiv.appendChild(editButton);
+      btnDiv.appendChild(button);
+
+      button.onclick = deleteTask;
+      editButton.onclick = editTask;
 
       document.body.appendChild(outerDiv);
     }
@@ -55,10 +84,18 @@ function displayTasks() {
 }
 
 function deleteTask(e) {
-  console.log("deleteTask");
-  console.log(e.target.id);
   taskArray = taskArray.filter(
     (task, index, self) => task !== self[e.target.id]
   );
-  console.log(taskArray);
+  displayTasks(taskArray);
+}
+
+function editTask(e) {
+  console.log("eidt");
+  console.log(taskArray[e.target.id]);
+  document.getElementById("inputBox").value = taskArray[e.target.id];
+  if (e.key === "Enter") {
+    console.log("object");
+  }
+  //taskArray[taskArray[e.target.id]] = displayTasks(taskArray);
 }
